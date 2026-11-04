@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movie;
+use App\Models\Movie;   
 use App\Models\Genre; 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 
 class MovieController extends Controller
 {
@@ -60,7 +60,10 @@ class MovieController extends Controller
     ]);
 
     // I-save gamit ang create()
-    Movie::create($validated);
+    $movie = Movie::create($validated);
+    Log::info('Movie saved', [
+    'id' => $movie->id,
+]);
 
     // Redirect pabalik
     return redirect()->route('movies.index')->with('success', 'Movie added successfully.');
@@ -107,10 +110,13 @@ class MovieController extends Controller
      * Remove the specified movie from storage.
      */
     public function destroy(Movie $movie)
-    {
+{
+    // E1, E2: Guard gamit ang abort_if
+    abort_if($movie->rating == 10, 403, 'Bawal i-delete ang perfect movie!');
+
     $movie->delete();
     return redirect()->route('movies.index')->with('success', 'Movie deleted!');
-    }
+}
 
     /**
      * Show a featured movie.
