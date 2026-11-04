@@ -1,14 +1,12 @@
-ITRACKB4 - LA11
+ITRACKB4 - LA12
 
-G1: Route model binding needs two things to be true. Name both, and say what happens when only one of them is.
+H1: The top of your error page named a file inside vendor. Say why that was not where your mistake was, and where the page showed you it actually was.
+-The vendor file was just where Laravel caught the error (it stopped working there), but the actual mistake was in my own code. The page showed me the exact file and line in the "Exception trace" section by opening the app/Http/Controllers/MovieController.php frame, which pointed to my typo.
 
-The parameter must be type-hinted with the model class, and the parameter name must exactly match the route segment (example; $movie for {movie}). If the name is wrong, Laravel does not know which variable to bind, and you get an empty model or an error. If the type-hint is missing, it just passes the raw ID string.
+H2: You wrote one Log::info line with a context array. Name something it will tell you next month that the error page could not.
+-The context array tells me the specific ID of the movie that was saved. Without it, the log would just say "Movie saved" and I wouldn't know which one it was. Next month, I can look back and know exactly which record caused the log.
 
-G2: Your Delete link gave a 404 even though the address was correct. Explain why.
+H3: Your guard answers with 403 instead of redirecting back with a message. Say when each of the two is the better answer.
+-A 403 is better when the user is trying to do something they are absolutely not allowed to do, like accessing an admin area. A redirect with a message is better for normal users who made a reasonable mistake, like trying to delete a record that is currently in use, so they don't see a scary error page.
 
-An <a> tag can only send a GET request, but the destroy route expects a DELETE request. The 404 happened because there was no route matching a GET request at that specific address. A form with @method('DELETE') is needed to send the correct verb.
-
-G3: old() takes a second argument on your edit form. What would break if you left it out, and what would break if you used only it?
-
-If I left out the second argument, the form would be blank on the first load because there is no old data yet. If I used only the second argument (without old()), my typed values would disappear after a failed submission, and the original record values would show up instead.
 
